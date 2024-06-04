@@ -64,18 +64,20 @@ const RouteList = () => {
     )
   }, [dragOverRouteId])
 
-  return (<div className='w-100' style={{ width: `${zoom - 10}vw` }}>
+  return (<div className='w-100' style={{ width: `${zoom - 2}vw` }}>
     <div className="flex bg-gray-200 p-1">
-      <div className="flex w-14">
-        #
-      </div>
+      <div className={`flex sticky px-2 left-0 z-10 bg-gray-200`}>
+        <div className="flex w-14">
+          #
+        </div>
 
-      <div className="flex-none w-32">
-        Fleet Actor
-      </div>
+        <div className="flex-none w-32">
+          Fleet Actor
+        </div>
 
-      <div className="flex-none w-32">
-        Load %
+        <div className="flex-none w-32">
+          Load %
+        </div>
       </div>
       <div className="relative flex flex-1 content-center">
         {
@@ -96,8 +98,8 @@ const RouteList = () => {
     <div onWheel={e => e.altKey &&
       (
         e.deltaY > 0 ?
-          zoom < 150 && setZoom(zoom + 5) :
-          zoom > 45 && setZoom(zoom - 5)
+          zoom < 350 && setZoom(zoom + 5) :
+          zoom > 100 && setZoom(zoom - 2)
       )}
     >
       {routeListData.map((item, index) => <div>

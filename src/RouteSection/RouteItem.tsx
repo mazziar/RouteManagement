@@ -69,17 +69,19 @@ const RouteItem: FC<PropsType> = ({
 
   }
 
-  return <div style={{ width: '100%' }} className={`flex p-1 px-8 py-4 ${index % 2 ? 'bg-gray-200' : ''}`}>
-    <div className="w-14">
-      {index + 1}
-    </div>
+  return <div style={{ width: '100%' }} className={`flex p-1  py-2 ${index % 2 ? 'bg-gray-200' : ''}`}>
+    <div className={`flex sticky p-2 left-0 z-10 ${index % 2 ? 'bg-gray-200' : 'bg-white'}`}>
+      <div className="w-14 ">
+        {index + 1}
+      </div>
 
-    <div className=" w-32">
-      van232
-    </div>
+      <div className=" w-32">
+        van232
+      </div>
 
-    <div className=" w-32">
-      100%
+      <div className=" w-32">
+        100%
+      </div>
     </div>
     <div className="relative flex-1">
       <div
@@ -100,7 +102,7 @@ const RouteItem: FC<PropsType> = ({
           left: `${(item.window[0] - unionWindow[0]) * 100 / sumWindow}%`,
           width: `${windowLength * 100 / sumWindow}%`
         }}
-        className="absolute">
+        className="absolute px-8">
         <div className="relative flex  content-center">
           <div className="-ml-8 rounded-lg border-2 border-neutral-400 text-gray-800 px-2 ">
             S
