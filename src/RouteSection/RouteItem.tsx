@@ -47,7 +47,6 @@ const RouteItem: FC<PropsType> = ({
 
   useEffect(() => {
     const target = document.getElementById('dropTarget' + index);
-    // const timeLineElement = document.getElementById('timeline');
     const getOffset = target?.getBoundingClientRect().left
 
     setRouteWidthPX(((target?.clientWidth || 0)))
@@ -63,13 +62,14 @@ const RouteItem: FC<PropsType> = ({
       ((step[0] - item.window[0]) * 100 / windowLength) ||
       ((mouseXLocation - offsetLeft) * 100 / routeWidthPX) >
       ((step[0] - item.window[0]) * 100 / windowLength) +
-      (((step[1] - step[0]) / windowLength) * 100)
+      (((step[1] - step[0]) / windowLength) * 100) ||
+      (dragOverRouteId === item.id && draggedStep[0] === step[0])
     )
     ).every(Boolean))
 
   }
 
-  return <div className={`flex p-1 px-8 py-4 ${index % 2 ? 'bg-gray-200' : ''}`}>
+  return <div style={{ width: '100%' }} className={`flex p-1 px-8 py-4 ${index % 2 ? 'bg-gray-200' : ''}`}>
     <div className="w-14">
       {index + 1}
     </div>
@@ -122,7 +122,7 @@ const RouteItem: FC<PropsType> = ({
                 width: `${(((step[1] - step[0]) * 100 / windowLength))}%`
               }}
               className={`absolute rounded-lg border-2
-              ${index % 3 == 0 && ' bg-blue-500  border-blue-500'}
+              ${index % 3 == 0 && ' bg-orange-500  border-orange-500'}
               ${index % 3 == 1 && 'bg-purple-500  border-purple-500'}
               ${index % 3 == 2 && 'bg-pink-500  border-pink-500'}
               text-gray-50 px-2 text-sm `}>
@@ -144,7 +144,7 @@ const RouteItem: FC<PropsType> = ({
           }
 
           <div id={'timeline'} className={`h-1 flex-1
-           ${index % 3 == 0 && 'bg-blue-500'}
+           ${index % 3 == 0 && 'bg-orange-500'}
            ${index % 3 == 1 && 'bg-purple-500'}
            ${index % 3 == 2 && 'bg-pink-500'}
             my-auto`} style={{}}>
