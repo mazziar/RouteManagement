@@ -2,19 +2,18 @@ import React, { FC, useEffect, useState, useCallback } from "react";
 import { RouteItem } from "./RouteItem";
 import { RouteListType } from '../schema/Utils'
 import data from '../data/data.json';
-import moment from "moment";
 
 const RouteList = () => {
   const [routeListData, seRouteListData] = useState<RouteListType>([{ id: 0, window: [0, 0], steps: [[0, 0]] }])
   const [unionWindow, setUnionWindow] = useState<number[]>([0, 0])
   const [baseTime, setBaseTime] = useState<string[]>([
-    '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+    '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00',
     '15:00', '16:00', '17:00', '19:00', '20:00', '21:00', '22:00',
     '23:00'
   ])
   const [draggedStep, setDraggedStep] = useState([0, 0])
   const [dropStep, setDropStep] = useState([0, 0])
-
+  const [zoom, setZoom] = useState(100)
   const [draggedRouteId, setDraggedRouteId] = useState(0)
   const [dragOverRouteId, setDragOverRouteId] = useState(0)
   const [canDrop, setCanDrop] = useState(true)
@@ -31,10 +30,12 @@ const RouteList = () => {
   }, [routeListData])
 
   useEffect(() => {
+
     unionWindow[0] !== 0 && setBaseTime(baseTime.filter(item =>
-      item > moment(unionWindow[0]).format('HH:mm') &&
-      item < moment(unionWindow[1]).format('HH:mm')
+      item >= `0${new Date(unionWindow[0]).getHours()}:00` &&
+      item <= `${new Date(unionWindow[1]).getHours()}:00`
     ))
+
   }, [unionWindow])
 
   const removeService = useCallback(() => {
@@ -63,8 +64,7 @@ const RouteList = () => {
     )
   }, [dragOverRouteId])
 
-
-  return (<div className='w-100'>
+  return (<div className='w-100' style={{ width: `${zoom - 10}vw` }}>
     <div className="flex bg-gray-200 p-1">
       <div className="flex w-14">
         #
@@ -79,37 +79,49 @@ const RouteList = () => {
       </div>
       <div className="relative flex flex-1 content-center">
         {
-          baseTime.map((timeItem, index) =>
-            <div key={timeItem + index}
-              style={{ left: `${(index) * 100 / baseTime.length}%`, }}
-              className="absolute flex-none ">
-              {timeItem}
-            </div>
-          )
+          baseTime.filter((_, index) => index % Math.ceil(100 / zoom) === 0)
+            .map((timeItem, index) =>
+              <div key={timeItem + index}
+                style={{
+                  left: `${(index) * 100 / baseTime
+                    .filter((_, index) => index % Math.ceil(100 / zoom) === 0).length}%`,
+                }}
+                className="absolute flex-none ">
+                {timeItem}
+              </div>
+            )
         }
       </div>
     </div>
-    {routeListData.map((item, index) => <div>
-      <RouteItem
-        key={index + 'row'}
-        item={item}
-        index={index}
-        unionWindow={unionWindow}
-        sumWindow={(unionWindow[1] - unionWindow[0])}
-        draggedStep={draggedStep}
-        setDraggedStep={setDraggedStep}
-        draggedRouteId={draggedRouteId}
-        setDraggedRouteId={setDraggedRouteId}
-        dragOverRouteId={dragOverRouteId}
-        setDragOverRouteId={setDragOverRouteId}
-        removeService={removeService}
-        addService={addService}
-        canDrop={canDrop}
-        setCanDrop={setCanDrop}
-        dropStep={dropStep}
-        setDropStep={setDropStep}
-      />
-    </div>)}
+    <div onWheel={e => e.altKey &&
+      (
+        e.deltaY > 0 ?
+          zoom < 150 && setZoom(zoom + 5) :
+          zoom > 45 && setZoom(zoom - 5)
+      )}
+    >
+      {routeListData.map((item, index) => <div>
+        <RouteItem
+          key={index + 'row'}
+          item={item}
+          index={index}
+          unionWindow={unionWindow}
+          sumWindow={(unionWindow[1] - unionWindow[0])}
+          draggedStep={draggedStep}
+          setDraggedStep={setDraggedStep}
+          draggedRouteId={draggedRouteId}
+          setDraggedRouteId={setDraggedRouteId}
+          dragOverRouteId={dragOverRouteId}
+          setDragOverRouteId={setDragOverRouteId}
+          removeService={removeService}
+          addService={addService}
+          canDrop={canDrop}
+          setCanDrop={setCanDrop}
+          dropStep={dropStep}
+          setDropStep={setDropStep}
+        />
+      </div>)}
+    </div>
 
   </div>
   )
